@@ -3,7 +3,8 @@
 $messageTemplate = file_get_contents($config['templatesDirectory'] . 'message.html');
 $paginationTemplate = file_get_contents($config['templatesDirectory'] . 'pagination.html');
 
-$database = file_get_contents($config['database']);
+$database = (file_exists($config['database']))? file_get_contents($config['database']):[];
+
 $messagesPerPage = $config['messagesCount'];
 
 
@@ -17,23 +18,22 @@ if (!empty($database)) {
         $messages[] = str_replace($from, $to, $messageTemplate);
     }
 
-    $page = empty($_GET['page'])? 1: $_GET['page'];
+    $page = empty($_GET['page']) ? 1 : $_GET['page'];
     $messagesCount = count($deserializedMessages);
 
-    showMessagesPerPage($page,$messagesPerPage, $messagesCount,$messages);
+    showMessagesPerPage($page, $messagesPerPage, $messagesCount, $messages);
 
     showPagination($messagesPerPage, $messagesCount, $paginationTemplate);
 
 }
 
-function showMessagesPerPage($page,$messagesPerPage, $messagesCount,$messages)
+function showMessagesPerPage($page, $messagesPerPage, $messagesCount, $messages)
 {
-    $from = ($page -1) * $messagesPerPage;
-    $to = min(($page*$messagesPerPage)-1,$messagesCount);
-    $array = array_slice($messages,$from,($to-$from)+1);
+    $from = ($page - 1) * $messagesPerPage;
+    $to = min(($page * $messagesPerPage) - 1, $messagesCount);
+    $array = array_slice($messages, $from, ($to - $from) + 1);
 
-    foreach($array as $value)
-    {
+    foreach ($array as $value) {
         echo $value;
     }
 
